@@ -80,7 +80,7 @@ export class AIService {
           complexity: parsed.complexity || 'Medium',
           priority: parsed.priority || 'High',
           risks: parsed.risks || ['Timeline delays', 'Scope creep'],
-          technologies: parsed.technologies || ['React', 'Node.js', 'Firebase'],
+          technologies: parsed.technologies || ['React', 'Node.js', 'Express'],
           keySkills: parsed.keySkills || ['JavaScript', 'React', 'Node.js'],
           successMetrics: parsed.successMetrics || ['On-time delivery', 'Client satisfaction']
         }
@@ -143,8 +143,8 @@ export class AIService {
       complexity: 'Medium',
       priority: 'High',
       risks: ['Timeline delays', 'Scope creep', 'Technical challenges'],
-      technologies: ['React', 'Node.js', 'Firebase', 'Tailwind CSS'],
-      keySkills: ['JavaScript', 'React', 'Node.js', 'Firebase'],
+      technologies: ['React', 'Node.js', 'Express', 'Tailwind CSS'],
+      keySkills: ['JavaScript', 'React', 'Node.js', 'Express'],
       successMetrics: ['On-time delivery', 'Client satisfaction', 'Code quality']
     }
   }

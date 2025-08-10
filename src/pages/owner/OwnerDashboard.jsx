@@ -24,8 +24,7 @@ import {
   Target,
   Star
 } from 'lucide-react'
-import { collection, query, onSnapshot, orderBy, where, updateDoc, doc, setDoc, addDoc } from 'firebase/firestore'
-import { db } from '../../firebase/config'
+// Firebase imports removed - using local storage instead
 
 function OwnerDashboard() {
   const { currentUser, logout } = useAuth()

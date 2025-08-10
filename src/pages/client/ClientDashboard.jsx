@@ -22,8 +22,7 @@ import {
 } from 'lucide-react'
 import ProjectSubmissionForm from '../../components/client/ProjectSubmissionForm'
 import ProjectCard from '../../components/client/ProjectCard'
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore'
-import { db } from '../../firebase/config'
+// Firebase imports removed - using local storage instead
 
 function ClientDashboard() {
   const { currentUser, logout } = useAuth()

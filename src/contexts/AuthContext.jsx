@@ -1,13 +1,4 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged,
-  updateProfile 
-} from 'firebase/auth'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
-import { auth, db } from '../firebase/config'
 
 const AuthContext = createContext()
 
@@ -20,41 +11,69 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   async function signup(email, password, displayName, role = 'client') {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-    const user = userCredential.user
+    // Simple validation
+    if (!email || !password || !displayName) {
+      throw new Error('All fields are required')
+    }
     
-    // Update profile with display name
-    await updateProfile(user, { displayName })
+    // Check if user already exists
+    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]')
+    if (existingUsers.find(u => u.email === email)) {
+      throw new Error('User already exists')
+    }
     
-    // Create user document in Firestore
-    await setDoc(doc(db, 'users', user.uid), {
-      uid: user.uid,
-      email: user.email,
+    // Create new user
+    const newUser = {
+      uid: Date.now().toString(),
+      email,
       displayName,
       role,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       projects: [],
       notifications: []
-    })
+    }
     
+    // Save user to localStorage
+    existingUsers.push(newUser)
+    localStorage.setItem('users', JSON.stringify(existingUsers))
+    localStorage.setItem('currentUser', JSON.stringify(newUser))
+    
+    setCurrentUser(newUser)
+    return newUser
+  }
+
+  async function login(email, password) {
+    // Simple validation
+    if (!email || !password) {
+      throw new Error('Email and password are required')
+    }
+    
+    // Find user in localStorage
+    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]')
+    const user = existingUsers.find(u => u.email === email)
+    
+    if (!user) {
+      throw new Error('User not found')
+    }
+    
+    // In a real app, you'd verify the password here
+    // For now, we'll just simulate successful login
+    localStorage.setItem('currentUser', JSON.stringify(user))
+    setCurrentUser(user)
     return user
   }
 
-  function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password)
-  }
-
   function logout() {
-    return signOut(auth)
+    localStorage.removeItem('currentUser')
+    setCurrentUser(null)
+    return Promise.resolve()
   }
 
   async function getUserData(uid) {
     try {
-      const userDoc = await getDoc(doc(db, 'users', uid))
-      if (userDoc.exists()) {
-        return userDoc.data()
-      }
-      return null
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]')
+      const user = existingUsers.find(u => u.uid === uid)
+      return user || null
     } catch (error) {
       console.error('Error fetching user data:', error)
       return null
@@ -62,31 +81,16 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const userData = await getUserData(user.uid)
-          if (userData) {
-            setCurrentUser({ ...user, ...userData })
-          } else {
-            // If no user data in Firestore, create basic user object
-            setCurrentUser({
-              ...user,
-              role: 'client',
-              displayName: user.displayName || user.email
-            })
-          }
-        } catch (error) {
-          console.error('Error setting current user:', error)
-          setCurrentUser(user)
-        }
-      } else {
-        setCurrentUser(null)
+    // Check if user is logged in on app start
+    try {
+      const savedUser = localStorage.getItem('currentUser')
+      if (savedUser) {
+        setCurrentUser(JSON.parse(savedUser))
       }
-      setLoading(false)
-    })
-
-    return unsubscribe
+    } catch (error) {
+      console.error('Error loading saved user:', error)
+    }
+    setLoading(false)
   }, [])
 
   const value = {

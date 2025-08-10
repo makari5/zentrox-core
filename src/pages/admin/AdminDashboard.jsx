@@ -15,8 +15,7 @@ import {
   Search,
   Home
 } from 'lucide-react'
-import { collection, query, onSnapshot, orderBy, updateDoc, doc } from 'firebase/firestore'
-import { db } from '../../firebase/config'
+// Firebase imports removed - using local storage instead
 import AdminProjectCard from '../../components/admin/AdminProjectCard'
 import TeamAssignmentModal from '../../components/admin/TeamAssignmentModal'
 

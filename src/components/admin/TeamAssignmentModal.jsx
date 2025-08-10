@@ -11,8 +11,7 @@ import {
   UserPlus,
   UserMinus
 } from 'lucide-react'
-import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore'
-import { db } from '../../firebase/config'
+// Firebase imports removed - using local storage instead
 
 function TeamAssignmentModal({ project, onClose, onSuccess }) {
   const [teamMembers, setTeamMembers] = useState([])

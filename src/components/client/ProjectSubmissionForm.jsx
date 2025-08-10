@@ -4,8 +4,7 @@ import { X, Send, Brain, Clock, DollarSign, Target, AlertTriangle } from 'lucide
 import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { toast } from 'react-hot-toast'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../../firebase/config'
+// Firebase imports removed - using local storage instead
 import AIService from '../../services/aiService'
 
 function ProjectSubmissionForm({ onClose, onSuccess }) {

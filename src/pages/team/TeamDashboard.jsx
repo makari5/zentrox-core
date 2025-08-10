@@ -18,8 +18,7 @@ import {
   Calendar,
   Star
 } from 'lucide-react'
-import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestore'
-import { db } from '../../firebase/config'
+// Firebase imports removed - using local storage instead
 
 function TeamDashboard() {
   const { currentUser, logout } = useAuth()
